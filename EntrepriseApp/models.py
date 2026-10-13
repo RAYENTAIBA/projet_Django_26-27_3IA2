@@ -24,7 +24,8 @@ class Utilisateur(AbstractUser):
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     telephone=models.CharField(max_length=8)
-    
+    REQUIRED_FIELDS = ['email', 'telephone']
+
     def save(self, *args, **kwargs):
         if not self.user_id:
             self.user_id = self.generate_id()
@@ -50,13 +51,17 @@ class Utilisateur(AbstractUser):
         
         return f"{prefixe}{c:02d}"
 
+    def __str__(self):
+        return f"{self.user_id} {self.email} {self.telephone} {self.role} {self.created_at} {self.updated_at}"
+    
+
 
 
 matricule_fiscal_validator=RegexValidator(regex=r'^\d{7}[/ -]?[A-Za-z][/ -]?[ABDNPEabdnpe][/ -]?[MPCNEmpcne][/ -]?\d{3}$', 
                                           message="Format du matricule fiscal invalide")
 class Entreprise(models.Model):
     raison_social=models.CharField(max_length=100)
-    matricule_fiscal = models.CharField(max_length=8, unique=True, validators=[matricule_fiscal_validator])
+    matricule_fiscal = models.CharField(max_length=100, unique=True, validators=[matricule_fiscal_validator])
     type_entreprise=models.CharField(max_length=15,choices=[
         ('chargeur','chargeur'),
         ('transporteur','transporteur'),

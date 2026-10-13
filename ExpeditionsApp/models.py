@@ -49,17 +49,13 @@ class Expedition(models.Model):
         c=int(last_value.reference[-5:])+1 if last_value else 1
         if c > 99999:
             raise ValidationError(f'Limite de 99999 expedition atteinte pour l\'annne {annee}')
-        
+        return f"{prefixe}{c:05d}"
+
         
 
 
-    """"def __str__(self):
-        return f"Expedition {self.id} {self.reference} {self.ville_depart} 
-        {self.ville_arrivee} {self.date_proposition} {self.date_souhaite} {self.poids_kg} 
-        {self.statut} {self.entreprise.raison_social} {self.entreprise.matricule_fiscal} 
-        {self.entreprise.type_entreprise} {self.entreprise.gerant.user_id} {self.entreprise.gerant.email} 
-        {self.entreprise.gerant.telephone} {self.entreprise.gerant.created_at} {self.entreprise.gerant.updated_at} 
-        {self.entreprise.adresse} {self.entreprise.created_at} {self.entreprise.updated_at}" """
+    def __str__(self):
+        return f"Expedition {self.id} {self.reference} {self.ville_depart} {self.ville_arrivee} {self.date_proposition} {self.date_souhaite} {self.poids_kg} {self.statut} {self.entreprise.raison_social} {self.entreprise.matricule_fiscal} {self.entreprise.type_entreprise} {self.entreprise.gerant.user_id} {self.entreprise.gerant.email} {self.entreprise.gerant.telephone} {self.entreprise.gerant.created_at} {self.entreprise.gerant.updated_at} {self.entreprise.adresse} {self.entreprise.created_at} {self.entreprise.updated_at}"
     
     
     
