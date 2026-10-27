@@ -31,7 +31,4 @@ class VehiculeAdmin(admin.ModelAdmin):
     )
     readonly_fields = ('created_at', 'updated_at')
 
-    class VehiculeInLine(admin.TabularInline):
-        model = Vehicule
-        fields = ('immmatriculation',)
-        extra = 1
+    

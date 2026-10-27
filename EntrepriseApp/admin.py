@@ -5,6 +5,13 @@ from django.contrib.auth.admin import UserAdmin
 admin.site.site_header='TransConnect - Administration'
 admin.site.site_title='TransConnect'
 admin.site.index_title='Tableau de bord'
+from VehiculesApp.models import Vehicule
+
+class VehiculeInLine(admin.TabularInline):
+    model = Vehicule
+    fields = ('immmatriculation',)
+    extra = 1
+
 # Register your models here.
 
 @admin.register(Utilisateur)
@@ -58,5 +65,7 @@ class EntrepriseAdmin(admin.ModelAdmin):
         })
     )
     readonly_fields = ('created_at', 'updated_at')
+    search_fields = ('raison_social', 'matricule_fiscal')
+    inlines = [VehiculeInLine]
 
     
