@@ -14,11 +14,11 @@ class Expedition(models.Model):
     date_souhaite=models.DateTimeField()
     poids_kg = models.PositiveIntegerField(validators=[MinValueValidator(1, "Le poids ne peut pas être nul")])
     statut=models.CharField(max_length=50,choices=[
-        ('publiee ','publiee'),
-        ('attribuee','attribuee'),
-        ('en cours','en cours'),
-        ('livree','livree'),
-        ('annulee','annulee')],
+        ('publiee ', 'publiee'),
+        ('attribuee', 'attribuee'),
+        ('en cours', 'en cours'),
+        ('livree', 'livree'),
+        ('annulee', 'annulee')],
         default='publiee')
     entreprise=models.ForeignKey('EntrepriseApp.Entreprise',on_delete=models.CASCADE, related_name='expeditions')
     created_at=models.DateTimeField(auto_now_add=True)

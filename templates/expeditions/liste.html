@@ -1,0 +1,8 @@
+<h1> liste des expeditions publiées </h1>
+<ul>
+    {% for e in expeditions %}
+        <li><a href="{% url 'expeditions:detail' e.reference %}">{{ e.reference }}</a></li>
+    {% empty %}
+        <li>Aucune expedition trouvee</li>
+    {% endfor %}
+</ul>
