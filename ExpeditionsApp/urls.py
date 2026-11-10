@@ -6,5 +6,5 @@ app_name = 'expeditions'
 
 urlpatterns = [
     path('', ListeViewExpedition.as_view(), name='liste'),
-    path('<str:reference>',detail_expedition,name='detail')
+    path('<str:reference>/', ExpeditionDetailView.as_view(), name='detail')
 ]

@@ -1,0 +1,13 @@
+<h1> Liste des véhicules </h1>
+<a href="{% url 'vehicules:create' %}">Ajouter un véhicule</a>
+<ul>
+    {% for vehicule in vehicules %}
+        <li>
+            <a href="{% url 'vehicules:update' vehicule.pk %}">{{ vehicule.immmatriculation }}</a>
+            — {{ vehicule.type_vehicule }} — {{ vehicule.capacite_kg }} kg — {{ vehicule.entreprise.raison_social }}{% if not vehicule.disponible %} (indisponible){% endif %}
+            — <a href="{% url 'vehicules:delete' vehicule.pk %}">Supprimer</a>
+        </li>
+    {% empty %}
+        <li>Aucun véhicule.</li>
+    {% endfor %}
+</ul>

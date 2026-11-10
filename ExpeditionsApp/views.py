@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Expedition
-from django.views.generic import ListView
-
+from django.views.generic import ListView, DetailView
 # Create your views here.
 
 """def liste_expeditions(request):
@@ -21,14 +20,30 @@ class ListeViewExpedition(ListView):
     context_object_name = 'expeditions'
     def get_queryset(self):
         return (
-        Expedition.objects
-        .filter(statut='publiee ')
-        .select_related('entreprise')
-        .order_by('-created_at')
+            Expedition.objects
+            .filter(statut__startswith='publiee')
+            .select_related('entreprise')
+            .order_by('-created_at')
         )
     
 
-def detail_expedition(request, reference):
+"""def detail_expedition(request, reference):
     expedition = get_object_or_404(Expedition, reference=reference)
     offres = (expedition.offres.select_related('transporteur', 'vehicule').order_by('-date_proposition'))
-    return render(request,'expeditions/detail.html',{'expedition': expedition, 'offres': offres},)  
+    return render(request,'expeditions/detail.html',{'expedition': expedition, 'offres': offres},)
+  """
+
+
+class ExpeditionDetailView(DetailView):
+    model = Expedition
+    template_name = 'expeditions/detail.html'
+    context_object_name = 'expedition'
+    slug_field = 'reference'
+    slug_url_kwarg = 'reference'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['offres'] = (
+        self.object.offres # Or related_name
+        .select_related('transporteur', 'vehicule')
+        )
+        return context 

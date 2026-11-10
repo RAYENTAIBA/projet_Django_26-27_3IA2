@@ -36,6 +36,7 @@ class Utilisateur_Admin(admin.ModelAdmin):
         ('role', {
             'fields': ('role',)
         })
+        
     )
     readonly_fields = ('created_at', 'updated_at','user_id')
     
@@ -67,5 +68,6 @@ class EntrepriseAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'updated_at')
     search_fields = ('raison_social', 'matricule_fiscal')
     inlines = [VehiculeInLine]
+    
 
     

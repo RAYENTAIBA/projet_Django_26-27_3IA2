@@ -20,8 +20,9 @@ from .views import home, homeWithName
 
 
 urlpatterns = [
-    path("", home),
-    path("home/<str:nom>/", homeWithName),
+    path("", home, name='homepage'),
+    path("home/<str:nom>/", homeWithName, name='home_with_name'),
     path('admin/', admin.site.urls),
-    path("expeditions/", include("ExpeditionsApp.urls")),
+    path('expeditions/', include("ExpeditionsApp.urls")),
+    path('vehicules/', include("VehiculesApp.urls")),
 ]

@@ -1,3 +1,6 @@
+{%extends "base.html"%}
+{% block title %}Liste des expéditions{% endblock %}
+{% block contenue %}
 <h1> liste des expeditions publiées </h1>
 <ul>
     {% for e in expeditions %}
@@ -6,3 +9,5 @@
         <li>Aucune expedition trouvee</li>
     {% endfor %}
 </ul>
+
+{% endblock %}
