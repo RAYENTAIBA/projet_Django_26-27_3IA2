@@ -1,22 +1,202 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Transconnect - {% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>TransConnect - {% block title %}Plateforme de Transport & Logistique{% endblock %}</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File (Logis Template) -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    /* Styling enhancements for dynamic Django content within Logis */
+    .table-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    .table-custom th {
+      background-color: #0e1d34;
+      color: #fff;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+    .card-custom {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      background: #fff;
+    }
+    .card-custom .card-header {
+      background-color: #0e1d34;
+      color: #fff;
+      padding: 15px 20px;
+      font-weight: 600;
+    }
+    .badge-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <header>
-        <h1><a href="{% url 'homepage' %}">Transconnect</a></h1>
-        <nav>
-            <a href="{% url 'homepage' %}">Accueil</a>
-            <a href="{% url 'expeditions:liste' %}">ExpeditionsApp</a>
-            <a href="{% url 'vehicules:liste' %}">VehiculesApp</a>
+
+<body class="{% block body_class %}starter-page{% endblock %}">
+
+  <!-- Logis Header -->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="{% url 'homepage' %}" class="logo d-flex align-items-center me-auto text-decoration-none">
+        <h1 class="sitename">TransConnect</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'homepage' %}">Accueil</a></li>
+          <li><a href="{% url 'expeditions:liste' %}">Expéditions</a></li>
+          <li><a href="{% url 'vehicules:liste' %}">Véhicules</a></li>
+          <li><a href="{% url 'entreprises:liste' %}">Entreprises</a></li>
+          <li><a href="{% url 'offres:liste' %}">Offres</a></li>
+          <li><a href="/admin/" target="_blank">Administration</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted text-decoration-none" href="{% url 'vehicules:create' %}">+ Nouveau Véhicule</a>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    {% block banner %}
+    <!-- Inner Page Title Banner -->
+    <div class="page-title dark-background" data-aos="fade" style="background-image: url({% static 'assets/img/page-title-bg.jpg' %});">
+      <div class="container position-relative">
+        <h1>{% block page_title %}TransConnect{% endblock %}</h1>
+        <p>{% block page_subtitle %}Plateforme collaborative de gestion de fret, transport et offres logistiques.{% endblock %}</p>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="{% url 'homepage' %}">Accueil</a></li>
+            <li class="current">{% block breadcrumb %}Tableau de bord{% endblock %}</li>
+          </ol>
         </nav>
-    </header>
-    <main>
+      </div>
+    </div>
+    {% endblock %}
+
+    <!-- Main Content Section -->
+    <section class="section py-5">
+      <div class="container" data-aos="fade-up">
         {% block contenue %}{% endblock %}
         {% block content %}{% endblock %}
-    </main>
-    <footer><p>Transconnect 2026</p></footer>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Logis Footer -->
+  <footer id="footer" class="footer dark-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="{% url 'homepage' %}" class="logo d-flex align-items-center text-decoration-none">
+            <span class="sitename">TransConnect</span>
+          </a>
+          <p class="mt-3">Solution digitale de fret et de logistique collaborative conçue dans le cadre du Workshop Django ESPRIT 2026-2027.</p>
+          <div class="social-links d-flex mt-4">
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Modules</h4>
+          <ul>
+            <li><a href="{% url 'homepage' %}">Accueil</a></li>
+            <li><a href="{% url 'expeditions:liste' %}">Expéditions</a></li>
+            <li><a href="{% url 'vehicules:liste' %}">Flotte de Véhicules</a></li>
+            <li><a href="{% url 'entreprises:liste' %}">Annuaire Entreprises</a></li>
+            <li><a href="{% url 'offres:liste' %}">Propositions d'Offres</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Architecture</h4>
+          <ul>
+            <li><a href="#">Django 5.2</a></li>
+            <li><a href="#">Class-Based Views</a></li>
+            <li><a href="#">ModelForms & Clean</a></li>
+            <li><a href="#">Logis Bootstrap 5.3</a></li>
+            <li><a href="/admin/">Django Admin</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+          <h4>Support & Contact</h4>
+          <p>Campus ESPRIT - Pôle Technologique El Ghazela</p>
+          <p>2088 Ariana, Tunisie</p>
+          <p class="mt-4"><strong>Email :</strong> <span>contact@transconnect.tn</span></p>
+          <p><strong>Projet :</strong> <span>Workshop Web Frameworks</span></p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">TransConnect</strong> <span>Tous droits réservés</span></p>
+      <div class="credits">
+        Modèle de site logistique propulsé par <a href="https://bootstrapmade.com/logis-bootstrap-logistics-website-template/">Logis (BootstrapMade)</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top Button -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
 </body>
+
 </html>

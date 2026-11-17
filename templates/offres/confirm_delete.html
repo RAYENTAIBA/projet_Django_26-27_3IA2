@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Suppression d'Offre{% endblock %}
+{% block page_title %}Suppression d'Offre{% endblock %}
+{% block page_subtitle %}Confirmation du retrait de la proposition.{% endblock %}
+{% block breadcrumb %}Suppression Offre{% endblock %}
+
+{% block contenue %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+    <div class="card-custom text-center">
+      <div class="p-4 bg-white">
+        <div class="text-danger mb-3">
+          <i class="bi bi-trash fs-1"></i>
+        </div>
+        <h4 class="fw-bold mb-2" style="color: #0e1d34;">Supprimer cette offre ?</h4>
+        <p class="text-muted mb-4">
+          Êtes-vous certain de vouloir retirer l'offre d'un montant de <strong class="text-success">{{ offre.prix }} TND</strong> pour l'expédition <strong class="text-primary">{{ offre.expedition.reference }}</strong> ?
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'offres:liste' %}" class="btn btn-outline-secondary px-4 rounded-pill">
+              Annuler
+            </a>
+            <button type="submit" class="btn btn-danger px-4 rounded-pill fw-semibold shadow-sm">
+              <i class="bi bi-trash me-1"></i> Supprimer définitivement
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

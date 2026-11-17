@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Accueil Logistique TransConnect{% endblock %}
+{% block body_class %}index-page{% endblock %}
+
+{% block banner %}
+<!-- Hero Section (Logis Template) -->
+<section id="hero" class="hero section dark-background">
+  <img src="{% static 'assets/img/world-dotted-map.png' %}" alt="" class="hero-bg" data-aos="fade-in">
+
+  <div class="container">
+    <div class="row gy-4 d-flex justify-content-between">
+      <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <h2 data-aos="fade-up">Votre Partenaire Logistique & Transport de Fret</h2>
+        <p data-aos="fade-up" data-aos-delay="100">
+          TransConnect connecte en temps réel les chargeurs industriels et les entreprises de transport pour optimiser les flux de marchandises et la gestion de flotte.
+        </p>
+
+        <!-- KPI Stats with PureCounter from Logis -->
+        <div class="row gy-4 mt-2" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span class="fs-2 fw-bold text-white">{{ total_vehicules }}</span>
+              <p class="text-white-50 small mb-0">Véhicules</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span class="fs-2 fw-bold text-white">{{ expeditions_publiees }}</span>
+              <p class="text-white-50 small mb-0">Expéditions</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span class="fs-2 fw-bold text-white">{{ total_entreprises }}</span>
+              <p class="text-white-50 small mb-0">Entreprises</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-6">
+            <div class="stats-item text-center w-100 h-100">
+              <span class="fs-2 fw-bold text-white">{{ total_offres }}</span>
+              <p class="text-white-50 small mb-0">Offres</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mt-4" data-aos="fade-up" data-aos-delay="300">
+          <a href="{% url 'expeditions:liste' %}" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow">
+            Consulter les Expéditions
+          </a>
+          <a href="{% url 'vehicules:create' %}" class="btn btn-outline-light px-4 py-2 rounded-pill fw-semibold">
+            + Ajouter un Véhicule
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-5 order-1 order-lg-2 hero-img" data-aos="zoom-out">
+        <img src="{% static 'assets/img/hero-img.svg' %}" class="img-fluid mb-3 mb-lg-0" alt="Logistique">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Services Section (Logis Template) -->
+<section id="featured-services" class="featured-services section py-5 bg-light">
+  <div class="container">
+    <div class="row gy-4">
+
+      <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
+        <div class="icon flex-shrink-0 text-primary fs-3 me-3"><i class="fa-solid fa-truck"></i></div>
+        <div>
+          <h4 class="title fw-bold"><a href="{% url 'vehicules:liste' %}" class="stretched-link text-decoration-none text-dark">Flotte de Véhicules</a></h4>
+          <p class="description small text-muted">Parc de camions, semi-remorques et fourgons avec suivi de charge et disponibilité.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
+        <div class="icon flex-shrink-0 text-primary fs-3 me-3"><i class="fa-solid fa-box-open"></i></div>
+        <div>
+          <h4 class="title fw-bold"><a href="{% url 'expeditions:liste' %}" class="stretched-link text-decoration-none text-dark">Expéditions Ouvertes</a></h4>
+          <p class="description small text-muted">Dépôts de fret par les chargeurs en attente de propositions de transporteurs.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="300">
+        <div class="icon flex-shrink-0 text-primary fs-3 me-3"><i class="fa-solid fa-building"></i></div>
+        <div>
+          <h4 class="title fw-bold"><a href="{% url 'entreprises:liste' %}" class="stretched-link text-decoration-none text-dark">Annuaire Partenaires</a></h4>
+          <p class="description small text-muted">Chargeurs et transporteurs certifiés avec matricules fiscaux et gérants dédiés.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="400">
+        <div class="icon flex-shrink-0 text-primary fs-3 me-3"><i class="fa-solid fa-tags"></i></div>
+        <div>
+          <h4 class="title fw-bold"><a href="{% url 'offres:liste' %}" class="stretched-link text-decoration-none text-dark">Bourse aux Offres</a></h4>
+          <p class="description small text-muted">Propositions tarifaires et délais de livraison compétitifs en temps réel.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block contenue %}
+<!-- Live Operational Tables Section -->
+<div class="row g-4 mt-2">
+  <!-- Dernières Expéditions -->
+  <div class="col-lg-7">
+    <div class="card-custom h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-box-seam me-2"></i>Dernières Expéditions Publiées</span>
+        <a href="{% url 'expeditions:liste' %}" class="text-white-50 text-decoration-none small">Voir tout &rarr;</a>
+      </div>
+      <div class="table-responsive p-3">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light small text-uppercase">
+            <tr>
+              <th>Référence</th>
+              <th>Itinéraire</th>
+              <th>Chargeur</th>
+              <th>Poids</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for exp in dernieres_expeditions %}
+            <tr>
+              <td><strong class="text-primary">{{ exp.reference }}</strong></td>
+              <td>{{ exp.ville_depart }} &rarr; {{ exp.ville_arrivee }}</td>
+              <td>{{ exp.entreprise.raison_social }}</td>
+              <td><span class="badge bg-light text-dark border">{{ exp.poids_kg }} kg</span></td>
+              <td>
+                <a href="{% url 'expeditions:detail' exp.reference %}" class="btn btn-sm btn-outline-primary py-0 px-2">Détails</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-4 text-muted">Aucune expédition publiée trouvée.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Véhicules Récents -->
+  <div class="col-lg-5">
+    <div class="card-custom h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-truck me-2"></i>Flotte Récemment Ajoutée</span>
+        <a href="{% url 'vehicules:liste' %}" class="text-white-50 text-decoration-none small">Gérer &rarr;</a>
+      </div>
+      <div class="table-responsive p-3">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light small text-uppercase">
+            <tr>
+              <th>Immatriculation</th>
+              <th>Type</th>
+              <th>Capacité</th>
+              <th>Disponibilité</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for v in derniers_vehicules %}
+            <tr>
+              <td><strong>{{ v.immmatriculation }}</strong></td>
+              <td>{{ v.type_vehicule }}</td>
+              <td>{{ v.capacite_kg }} kg</td>
+              <td>
+                {% if v.disponible %}
+                  <span class="badge bg-success-subtle text-success border border-success-subtle">Disponible</span>
+                {% else %}
+                  <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Indisponible</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center py-4 text-muted">Aucun véhicule enregistré.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

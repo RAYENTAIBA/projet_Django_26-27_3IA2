@@ -1,13 +1,81 @@
-<h1> Liste des véhicules </h1>
-<a href="{% url 'vehicules:create' %}">Ajouter un véhicule</a>
-<ul>
-    {% for vehicule in vehicules %}
-        <li>
-            <a href="{% url 'vehicules:update' vehicule.pk %}">{{ vehicule.immmatriculation }}</a>
-            — {{ vehicule.type_vehicule }} — {{ vehicule.capacite_kg }} kg — {{ vehicule.entreprise.raison_social }}{% if not vehicule.disponible %} (indisponible){% endif %}
-            — <a href="{% url 'vehicules:delete' vehicule.pk %}">Supprimer</a>
-        </li>
-    {% empty %}
-        <li>Aucun véhicule.</li>
-    {% endfor %}
-</ul>
+{% extends "base.html" %}
+
+{% block title %}Flotte de Véhicules{% endblock %}
+{% block page_title %}Flotte de Véhicules{% endblock %}
+{% block page_subtitle %}Consultez, enregistrez et gérez les véhicules de fret.{% endblock %}
+{% block breadcrumb %}Véhicules{% endblock %}
+
+{% block contenue %}
+<div class="table-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1" style="color: #0e1d34;">Inventaire du Parc Roulant</h3>
+      <p class="text-muted small mb-0">Tous les véhicules affiliés aux transporteurs certifiés.</p>
+    </div>
+    <a href="{% url 'vehicules:create' %}" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm">
+      <i class="bi bi-plus-lg me-1"></i> Ajouter un Véhicule
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light small text-uppercase">
+        <tr>
+          <th>Immatriculation</th>
+          <th>Type de Véhicule</th>
+          <th>Capacité Utile</th>
+          <th>Entreprise Transporteur</th>
+          <th>Disponibilité</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vehicule in vehicules %}
+        <tr>
+          <td>
+            <a href="{% url 'vehicules:update' vehicule.pk %}" class="fw-bold text-decoration-none text-primary">
+              <i class="bi bi-truck me-1"></i>{{ vehicule.immmatriculation }}
+            </a>
+          </td>
+          <td><span class="badge bg-light text-dark border px-2 py-1">{{ vehicule.type_vehicule }}</span></td>
+          <td><strong>{{ vehicule.capacite_kg }}</strong> kg</td>
+          <td>
+            <a href="{% url 'entreprises:detail' vehicule.entreprise.pk %}" class="text-decoration-none text-secondary">
+              <i class="bi bi-building me-1"></i>{{ vehicule.entreprise.raison_social }}
+            </a>
+          </td>
+          <td>
+            {% if vehicule.disponible %}
+              <span class="badge bg-success-subtle text-success border border-success-subtle badge-status">
+                <i class="bi bi-check-circle me-1"></i>Disponible
+              </span>
+            {% else %}
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle badge-status">
+                <i class="bi bi-x-circle me-1"></i>Indisponible
+              </span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              <a href="{% url 'vehicules:update' vehicule.pk %}" class="btn btn-outline-secondary" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <a href="{% url 'vehicules:delete' vehicule.pk %}" class="btn btn-outline-danger" title="Supprimer">
+                <i class="bi bi-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+            Aucun véhicule enregistré dans le système.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

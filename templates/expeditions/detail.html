@@ -1,33 +1,112 @@
-<h1> Details de l'expedition {{ expedition.reference }}</h1>
-<ul>
-    <li>Ville de départ : {{ expedition.ville_depart }}</li>
-    <li>Ville d'arrivée : {{ expedition.ville_arrivee }}</li>
-</ul>
+{% extends "base.html" %}
 
-<h2> Les offres pour cette expedition </h2>
-<table>
-    <thead>
+{% block title %}Expédition {{ expedition.reference }}{% endblock %}
+{% block page_title %}Expédition {{ expedition.reference }}{% endblock %}
+{% block page_subtitle %}Détails de l'acheminement et propositions reçues.{% endblock %}
+{% block breadcrumb %}Détail Expédition{% endblock %}
+
+{% block contenue %}
+<div class="mb-4">
+  <a href="{% url 'expeditions:liste' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 mb-3">
+    <i class="bi bi-arrow-left me-1"></i> Retour aux expéditions
+  </a>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="card-custom h-100">
+      <div class="card-header">
+        <i class="bi bi-box-seam me-2"></i>Caractéristiques du Fret
+      </div>
+      <div class="p-4 bg-white">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-muted">Trajet</span>
+            <strong class="text-dark">{{ expedition.ville_depart }} &rarr; {{ expedition.ville_arrivee }}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-muted">Masse totale</span>
+            <strong class="text-primary">{{ expedition.poids_kg }} kg</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-muted">Date souhaitée</span>
+            <span>{{ expedition.date_souhaite|date:"d/m/Y H:i" }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between px-0">
+            <span class="text-muted">Statut</span>
+            <span class="badge bg-success-subtle text-success border border-success-subtle badge-status">{{ expedition.statut }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card-custom h-100">
+      <div class="card-header">
+        <i class="bi bi-building me-2"></i>Chargeur Responsable
+      </div>
+      <div class="p-4 bg-white">
+        <h5 class="fw-bold mb-1" style="color: #0e1d34;">{{ expedition.entreprise.raison_social }}</h5>
+        <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ expedition.entreprise.adresse }}</p>
+        <p class="text-muted small mb-3"><i class="bi bi-card-text me-1"></i>Matricule Fiscal : <code>{{ expedition.entreprise.matricule_fiscal }}</code></p>
+        <div class="border-top pt-2">
+          <span class="text-muted small">Contact :</span>
+          <div class="fw-semibold">{{ expedition.entreprise.gerant.username }} ({{ expedition.entreprise.gerant.email }})</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0" style="color: #0e1d34;"><i class="bi bi-tags me-2 text-primary"></i>Offres Soumises pour cette Expédition</h4>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light small text-uppercase">
         <tr>
-            <th>Prix</th>
-            <th>Délai (jours)</th>
-            <th>Transporteur</th>
-            <th>Vehicule</th>
-            <th>Statut</th>
+          <th>Montant</th>
+          <th>Délai</th>
+          <th>Transporteur</th>
+          <th>Véhicule</th>
+          <th>Statut</th>
+          <th class="text-end">Date de Soumission</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for offre in offres %}
         <tr>
-            <td>{{ offre.prix }}</td>
-            <td>{{ offre.delai_jours }}</td>
-            <td>{{ offre.transporteur.raison_social }}</td>
-            <td>{{ offre.vehicule.immmatriculation }}</td>
-            <td>{{ offre.statut }}</td>
+          <td><strong class="text-success fs-6">{{ offre.prix }} TND</strong></td>
+          <td>{{ offre.delai_jours }} jour(s)</td>
+          <td>
+            <a href="{% url 'entreprises:detail' offre.transporteur.pk %}" class="text-decoration-none">
+              {{ offre.transporteur.raison_social }}
+            </a>
+          </td>
+          <td><span class="badge bg-light text-dark border">{{ offre.vehicule.immmatriculation }}</span></td>
+          <td>
+            {% if offre.statut == 'acceptee' %}
+              <span class="badge bg-success-subtle text-success border border-success-subtle badge-status">Acceptée</span>
+            {% elif offre.statut == 'refusee' %}
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle badge-status">Refusée</span>
+            {% else %}
+              <span class="badge bg-warning-subtle text-warning border border-warning-subtle badge-status">Proposée</span>
+            {% endif %}
+          </td>
+          <td class="text-end text-muted small">{{ offre.date_proposition|date:"d/m/Y H:i" }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5">Aucune offre trouvée pour cette expédition</td>
+          <td colspan="6" class="text-center py-4 text-muted">
+            Aucune offre proposée pour le moment sur cette expédition.
+          </td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

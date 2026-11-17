@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Suppression d'Entreprise{% endblock %}
+{% block page_title %}Suppression d'Entreprise{% endblock %}
+{% block page_subtitle %}Attention : suppression en cascade.{% endblock %}
+{% block breadcrumb %}Suppression Entreprise{% endblock %}
+
+{% block contenue %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+    <div class="card-custom text-center">
+      <div class="p-4 bg-white">
+        <div class="text-danger mb-3">
+          <i class="bi bi-exclamation-triangle fs-1"></i>
+        </div>
+        <h4 class="fw-bold mb-2" style="color: #0e1d34;">Supprimer l'entreprise ?</h4>
+        <p class="text-muted mb-3">
+          Êtes-vous certain de vouloir supprimer l'entreprise <strong class="text-dark">{{ entreprise.raison_social }}</strong> ?
+        </p>
+        <div class="alert alert-warning py-2 small mb-4">
+          <i class="bi bi-exclamation-circle me-1"></i> <strong>Avertissement :</strong> Tous les véhicules, offres ou expéditions rattachés à cette entreprise seront également supprimés.
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'entreprises:liste' %}" class="btn btn-outline-secondary px-4 rounded-pill">
+              Annuler
+            </a>
+            <button type="submit" class="btn btn-danger px-4 rounded-pill fw-semibold shadow-sm">
+              <i class="bi bi-trash me-1"></i> Confirmer la suppression
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

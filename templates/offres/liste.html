@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Registre des Offres{% endblock %}
+{% block page_title %}Registre des Offres{% endblock %}
+{% block page_subtitle %}Propositions tarifaires et délais de livraison des transporteurs.{% endblock %}
+{% block breadcrumb %}Offres{% endblock %}
+
+{% block contenue %}
+<div class="table-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1" style="color: #0e1d34;">Propositions Tarifaires</h3>
+      <p class="text-muted small mb-0">Offres soumises pour répondre aux expéditions publiées.</p>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light small text-uppercase">
+        <tr>
+          <th>ID</th>
+          <th>Montant</th>
+          <th>Délai</th>
+          <th>Expédition Cible</th>
+          <th>Transporteur</th>
+          <th>Véhicule Affecté</th>
+          <th>Statut</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for offre in offres %}
+        <tr>
+          <td><span class="text-muted small">#{{ offre.pk }}</span></td>
+          <td><strong class="text-success fs-6">{{ offre.prix }} TND</strong></td>
+          <td>{{ offre.delai_jours }} jour(s)</td>
+          <td>
+            <a href="{% url 'expeditions:detail' offre.expedition.reference %}" class="fw-bold text-decoration-none text-primary">
+              <i class="bi bi-box-seam me-1"></i>{{ offre.expedition.reference }}
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'entreprises:detail' offre.transporteur.pk %}" class="text-decoration-none text-secondary">
+              {{ offre.transporteur.raison_social }}
+            </a>
+          </td>
+          <td><span class="badge bg-light text-dark border">{{ offre.vehicule.immmatriculation }}</span></td>
+          <td>
+            {% if offre.statut == 'acceptee' %}
+              <span class="badge bg-success-subtle text-success border border-success-subtle badge-status">Acceptée</span>
+            {% elif offre.statut == 'refusee' %}
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle badge-status">Refusée</span>
+            {% else %}
+              <span class="badge bg-warning-subtle text-warning border border-warning-subtle badge-status">Proposée</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'offres:delete' offre.pk %}" class="btn btn-outline-danger btn-sm rounded-pill px-3" title="Supprimer">
+              <i class="bi bi-trash"></i> Supprimer
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+            Aucune offre enregistrée dans le système.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

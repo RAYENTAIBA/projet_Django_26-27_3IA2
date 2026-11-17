@@ -1,13 +1,69 @@
-{%extends "base.html"%}
-{% block title %}Liste des expéditions{% endblock %}
-{% block contenue %}
-<h1> liste des expeditions publiées </h1>
-<ul>
-    {% for e in expeditions %}
-        <li><a href="{% url 'expeditions:detail' e.reference %}">{{ e.reference }}</a></li>
-    {% empty %}
-        <li>Aucune expedition trouvee</li>
-    {% endfor %}
-</ul>
+{% extends "base.html" %}
 
+{% block title %}Bourse aux Expéditions{% endblock %}
+{% block page_title %}Bourse d'Expéditions{% endblock %}
+{% block page_subtitle %}Explorez les demandes de transport de fret déposées par les chargeurs.{% endblock %}
+{% block breadcrumb %}Expéditions{% endblock %}
+
+{% block contenue %}
+<div class="table-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1" style="color: #0e1d34;">Expéditions Publiées</h3>
+      <p class="text-muted small mb-0">Disponibles pour la soumission d'offres tarifaires.</p>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light small text-uppercase">
+        <tr>
+          <th>Référence</th>
+          <th>Départ</th>
+          <th>Destination</th>
+          <th>Chargeur</th>
+          <th>Poids (kg)</th>
+          <th>Statut</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exp in expeditions %}
+        <tr>
+          <td>
+            <a href="{% url 'expeditions:detail' exp.reference %}" class="fw-bold text-decoration-none text-primary">
+              <i class="bi bi-box-seam me-1"></i>{{ exp.reference }}
+            </a>
+          </td>
+          <td><i class="bi bi-geo-alt text-muted me-1"></i>{{ exp.ville_depart }}</td>
+          <td><i class="bi bi-flag text-muted me-1"></i>{{ exp.ville_arrivee }}</td>
+          <td>
+            <a href="{% url 'entreprises:detail' exp.entreprise.pk %}" class="text-decoration-none text-secondary">
+              {{ exp.entreprise.raison_social }}
+            </a>
+          </td>
+          <td><span class="badge bg-light text-dark border">{{ exp.poids_kg }} kg</span></td>
+          <td>
+            <span class="badge bg-success-subtle text-success border border-success-subtle badge-status">
+              {{ exp.statut }}
+            </span>
+          </td>
+          <td class="text-end">
+            <a href="{% url 'expeditions:detail' exp.reference %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+              Consulter &rarr;
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center py-5 text-muted">
+            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+            Aucune expédition publiée actuellement.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
