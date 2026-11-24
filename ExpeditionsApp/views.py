@@ -1,23 +1,15 @@
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from EntrepriseApp.mixins import ChargeurRequisMixin
 from .models import Expedition
-from django.views.generic import ListView, DetailView
-# Create your views here.
+from .forms import ExpeditionForm
 
-"""def liste_expeditions(request):
-    expeditions = (
-        Expedition.objects
-        .filter(statut='publiee ')
-        .select_related('entreprise')
-        .order_by('-created_at')
-    )
-    print(expeditions)
-    return render(request, 'expeditions/liste.html', {'expeditions': expeditions})
-"""
 
 class ListeViewExpedition(ListView):
     model = Expedition
     template_name = 'expeditions/liste.html'
     context_object_name = 'expeditions'
+
     def get_queryset(self):
         return (
             Expedition.objects
@@ -25,13 +17,6 @@ class ListeViewExpedition(ListView):
             .select_related('entreprise')
             .order_by('-created_at')
         )
-    
-
-"""def detail_expedition(request, reference):
-    expedition = get_object_or_404(Expedition, reference=reference)
-    offres = (expedition.offres.select_related('transporteur', 'vehicule').order_by('-date_proposition'))
-    return render(request,'expeditions/detail.html',{'expedition': expedition, 'offres': offres},)
-  """
 
 
 class ExpeditionDetailView(DetailView):
@@ -40,10 +25,45 @@ class ExpeditionDetailView(DetailView):
     context_object_name = 'expedition'
     slug_field = 'reference'
     slug_url_kwarg = 'reference'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['offres'] = (
-        self.object.offres # Or related_name
-        .select_related('transporteur', 'vehicule')
+            self.object.offres
+            .select_related('transporteur', 'vehicule')
         )
-        return context 
+        return context
+
+
+class ExpeditionsDeMonEntrepriseMixin:
+    def get_queryset(self):
+        return Expedition.objects.filter(entreprise=self.request.user.entreprise)
+
+
+class ExpeditionCreateView(ChargeurRequisMixin, CreateView):
+    model = Expedition
+    form_class = ExpeditionForm
+    template_name = 'expeditions/form.html'
+    success_url = reverse_lazy('expeditions:liste')
+
+    def form_valid(self, form):
+        form.instance.entreprise = self.request.user.entreprise
+        return super().form_valid(form)
+
+
+class ExpeditionUpdateView(ChargeurRequisMixin, ExpeditionsDeMonEntrepriseMixin, UpdateView):
+    model = Expedition
+    form_class = ExpeditionForm
+    template_name = 'expeditions/form.html'
+    slug_field = 'reference'
+    slug_url_kwarg = 'reference'
+    success_url = reverse_lazy('expeditions:liste')
+
+
+class ExpeditionDeleteView(ChargeurRequisMixin, ExpeditionsDeMonEntrepriseMixin, DeleteView):
+    model = Expedition
+    template_name = 'expeditions/confirm_delete.html'
+    slug_field = 'reference'
+    slug_url_kwarg = 'reference'
+    context_object_name = 'expedition'
+    success_url = reverse_lazy('expeditions:liste')

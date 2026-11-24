@@ -6,10 +6,25 @@
 {% block breadcrumb %}Détail Expédition{% endblock %}
 
 {% block contenue %}
-<div class="mb-4">
-  <a href="{% url 'expeditions:liste' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 mb-3">
+<div class="mb-4 d-flex justify-content-between align-items-center">
+  <a href="{% url 'expeditions:liste' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 mb-0">
     <i class="bi bi-arrow-left me-1"></i> Retour aux expéditions
   </a>
+  <div class="d-flex gap-2">
+    {% if user.is_authenticated and user.entreprise.type_entreprise == 'transporteur' %}
+      <a href="{% url 'offres:ajouter' %}?expedition={{ expedition.pk }}" class="btn btn-primary btn-sm rounded-pill fw-semibold">
+        <i class="bi bi-send me-1"></i> Proposer une offre
+      </a>
+    {% endif %}
+    {% if user.is_authenticated and user.entreprise == expedition.entreprise %}
+      <a href="{% url 'expeditions:update' expedition.reference %}" class="btn btn-outline-secondary btn-sm rounded-pill">
+        <i class="bi bi-pencil me-1"></i> Modifier
+      </a>
+      <a href="{% url 'expeditions:delete' expedition.reference %}" class="btn btn-outline-danger btn-sm rounded-pill">
+        <i class="bi bi-trash me-1"></i> Supprimer
+      </a>
+    {% endif %}
+  </div>
 </div>
 
 <div class="row g-4 mb-4">

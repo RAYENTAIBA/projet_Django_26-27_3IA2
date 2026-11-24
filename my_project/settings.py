@@ -31,16 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'EntrepriseApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'EntrepriseApp',
     'VehiculesApp',
     'ExpeditionsApp',
     'OffresApp',
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -125,4 +127,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL='EntrepriseApp.Utilisateur'
+AUTH_USER_MODEL = 'EntrepriseApp.Utilisateur'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'expeditions:liste'
+LOGOUT_REDIRECT_URL = 'expeditions:liste'

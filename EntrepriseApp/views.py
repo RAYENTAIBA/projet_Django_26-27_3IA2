@@ -1,7 +1,20 @@
+from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Entreprise
-from .forms import EntrepriseForm
+from .forms import EntrepriseForm, InscriptionForm
+
+
+class InscriptionView(CreateView):
+    form_class = InscriptionForm
+    template_name = 'registration/inscription.html'
+    success_url = reverse_lazy('entreprises:ajouter')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)  # crée l'utilisateur (self.object)
+        login(self.request, self.object)     # ouvre directement sa session
+        return response
 
 
 class EntrepriseListView(ListView):
@@ -28,21 +41,25 @@ class EntrepriseDetailView(DetailView):
         return context
 
 
-class EntrepriseCreateView(CreateView):
+class EntrepriseCreateView(LoginRequiredMixin, CreateView):
+    model = Entreprise
+    fields = ['raison_social', 'matricule_fiscal', 'type_entreprise', 'adresse']
+    template_name = 'entreprises/form.html'
+    success_url = reverse_lazy('expeditions:liste')
+
+    def form_valid(self, form):
+        form.instance.gerant = self.request.user
+        return super().form_valid(form)
+
+
+class EntrepriseUpdateView(LoginRequiredMixin, UpdateView):
     model = Entreprise
     form_class = EntrepriseForm
     template_name = 'entreprises/form.html'
     success_url = reverse_lazy('entreprises:liste')
 
 
-class EntrepriseUpdateView(UpdateView):
-    model = Entreprise
-    form_class = EntrepriseForm
-    template_name = 'entreprises/form.html'
-    success_url = reverse_lazy('entreprises:liste')
-
-
-class EntrepriseDeleteView(DeleteView):
+class EntrepriseDeleteView(LoginRequiredMixin, DeleteView):
     model = Entreprise
     template_name = 'entreprises/confirm_delete.html'
     context_object_name = 'entreprise'

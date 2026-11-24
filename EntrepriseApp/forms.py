@@ -1,5 +1,11 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import Entreprise, Utilisateur
+
+class InscriptionForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = Utilisateur
+        fields = ('username', 'email', 'telephone')
 
 class EntrepriseForm(forms.ModelForm):
     class Meta:

@@ -12,6 +12,11 @@
       <h3 class="fw-bold mb-1" style="color: #0e1d34;">Expéditions Publiées</h3>
       <p class="text-muted small mb-0">Disponibles pour la soumission d'offres tarifaires.</p>
     </div>
+    {% if user.is_authenticated and user.entreprise.type_entreprise == 'chargeur' %}
+    <a href="{% url 'expeditions:create' %}" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow-sm">
+      <i class="bi bi-plus-lg me-1"></i> Publier une expédition
+    </a>
+    {% endif %}
   </div>
 
   <div class="table-responsive">

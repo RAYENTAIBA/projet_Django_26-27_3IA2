@@ -1,7 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView
+from EntrepriseApp.mixins import TransporteurRequisMixin
 from EntrepriseApp.models import Entreprise
 from ExpeditionsApp.models import Expedition
 from VehiculesApp.models import Vehicule
@@ -17,7 +19,7 @@ class OffreListView(ListView):
         return Offre.objects.select_related('expedition', 'transporteur', 'vehicule').order_by('-date_proposition')
 
 
-class OffreCreateView(CreateView):
+class OffreCreateView(TransporteurRequisMixin, CreateView):
     model = Offre
     fields = ['expedition', 'vehicule', 'prix', 'delai_jours']
     template_name = 'offres/form.html'
@@ -40,7 +42,7 @@ class OffreCreateView(CreateView):
         return form
 
     def form_valid(self, form):
-        # transporteur : déterminé par le contexte (paramètre d'URL), jamais fourni tel quel par le client
+        # transporteur : déterminé par l'utilisateur connecté, jamais fourni tel quel par le client
         form.instance.transporteur = self.get_entreprise_courante()
         try:
             return super().form_valid(form)
@@ -52,12 +54,10 @@ class OffreCreateView(CreateView):
         return reverse('expeditions:detail', kwargs={'reference': self.object.expedition.reference})
 
     def get_entreprise_courante(self):
-        return get_object_or_404(
-            Entreprise, pk=self.kwargs['entreprise_id'], type_entreprise='transporteur'
-        )
+        return self.request.user.entreprise
 
 
-class OffreDeleteView(DeleteView):
+class OffreDeleteView(LoginRequiredMixin, DeleteView):
     model = Offre
     template_name = 'offres/confirm_delete.html'
     context_object_name = 'offre'

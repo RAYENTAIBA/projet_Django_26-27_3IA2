@@ -55,9 +55,13 @@
             {% endif %}
           </td>
           <td class="text-end">
+            {% if user.is_authenticated and user.entreprise == offre.transporteur %}
             <a href="{% url 'offres:delete' offre.pk %}" class="btn btn-outline-danger btn-sm rounded-pill px-3" title="Supprimer">
               <i class="bi bi-trash"></i> Supprimer
             </a>
+            {% else %}
+              <span class="text-muted small">&mdash;</span>
+            {% endif %}
           </td>
         </tr>
         {% empty %}

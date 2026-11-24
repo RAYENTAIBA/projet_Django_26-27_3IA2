@@ -82,15 +82,47 @@
         <ul>
           <li><a href="{% url 'homepage' %}">Accueil</a></li>
           <li><a href="{% url 'expeditions:liste' %}">Expéditions</a></li>
-          <li><a href="{% url 'vehicules:liste' %}">Véhicules</a></li>
+          {% if user.is_authenticated and user.entreprise.type_entreprise == 'transporteur' %}
+            <li><a href="{% url 'vehicules:liste' %}">Mes véhicules</a></li>
+          {% else %}
+            <li><a href="{% url 'vehicules:liste' %}">Véhicules</a></li>
+          {% endif %}
+          {% if user.is_authenticated and user.entreprise.type_entreprise == 'chargeur' %}
+            <li><a href="{% url 'expeditions:create' %}">Publier une expédition</a></li>
+          {% endif %}
           <li><a href="{% url 'entreprises:liste' %}">Entreprises</a></li>
           <li><a href="{% url 'offres:liste' %}">Offres</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'password_change' %}">Changer mon mot de passe</a></li>
+          {% else %}
+            <li><a href="{% url 'login' %}">Se connecter</a></li>
+            <li><a href="{% url 'inscription' %}">Créer un compte</a></li>
+          {% endif %}
           <li><a href="/admin/" target="_blank">Administration</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted text-decoration-none" href="{% url 'vehicules:create' %}">+ Nouveau Véhicule</a>
+      {% if user.is_authenticated %}
+        <div class="d-flex align-items-center ms-3">
+          <span class="text-white-50 small me-2 d-none d-md-inline">Connecté : <strong class="text-white">{{ user.username }}</strong></span>
+          {% if user.entreprise.type_entreprise == 'transporteur' %}
+            <a class="btn-getstarted text-decoration-none py-1 px-3 me-2" href="{% url 'vehicules:create' %}">+ Véhicule</a>
+          {% elif user.entreprise.type_entreprise == 'chargeur' %}
+            <a class="btn-getstarted text-decoration-none py-1 px-3 me-2" href="{% url 'expeditions:create' %}">+ Expédition</a>
+          {% elif not user.entreprise %}
+            <a class="btn-getstarted text-decoration-none py-1 px-3 me-2" href="{% url 'entreprises:ajouter' %}">+ Entreprise</a>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light btn-sm rounded-pill px-3 py-1">
+              <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+            </button>
+          </form>
+        </div>
+      {% else %}
+        <a class="btn-getstarted text-decoration-none ms-3" href="{% url 'login' %}">Se connecter</a>
+      {% endif %}
 
     </div>
   </header>
